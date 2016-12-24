@@ -1,5 +1,7 @@
 var noble = require('noble');
 var http = require('http');
+const mqtt = require('mqtt');
+const client = mqtt.connect('mqtt://192.168.1.22');
 
 var options = {
   host: 'maker.ifttt.com',
@@ -41,10 +43,10 @@ noble.on('discover', function(peripheral) {
     var manufacturerData = peripheral.advertisement.manufacturerData;
     if (rikou.test(serviceUuids) || serviceUuids == testUUID) {
       console.log(now, ' - found device: ', serviceUuids, ' ', rssi);
-      if (rssi > -40) {
-        http.request(options, callback).end();
+      if (rssi > -80) {
+        client.publish('dogs/rikou', rssi);
       }
-      // console.log('Manufacturer Data: ', manufacturerData);
+      //console.log('Manufacturer Data: ', manufacturerData);
       // console.log('---');
     }
 });
