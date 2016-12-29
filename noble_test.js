@@ -5,8 +5,8 @@ const client = mqtt.connect('mqtt://192.168.1.22');
 var seenCount = 0;
 
 var options = {
-  host: 'maker.ifttt.com',
-  path: '/trigger/rikou_detected/with/key/KKOHfnVQ82JyS_KiNZqCR'
+  host: 'nodered-wisehub.pagekite.me',
+  path: '/trigger/rikou_is_outside'
 };
 
 callback = function(response) {
