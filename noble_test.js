@@ -2,6 +2,7 @@ var noble = require('noble');
 var http = require('http');
 const mqtt = require('mqtt');
 const client = mqtt.connect('mqtt://192.168.1.22');
+var seenCount = 0;
 
 var options = {
   host: 'maker.ifttt.com',
@@ -45,6 +46,11 @@ noble.on('discover', function(peripheral) {
       console.log(now, ' - found device: ', serviceUuids, ' ', rssi);
       if (rssi > -80) {
         //client.publish('dogs/rikou', rssi);
+        seenCount++;
+      } else {
+        seenCount = 0;
+      }
+      if (seenCount > 2) {
         http.request(options, callback).end();
       }
       //console.log('Manufacturer Data: ', manufacturerData);
