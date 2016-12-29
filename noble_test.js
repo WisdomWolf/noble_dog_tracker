@@ -44,7 +44,8 @@ noble.on('discover', function(peripheral) {
     if (rikou.test(serviceUuids) || serviceUuids == testUUID) {
       console.log(now, ' - found device: ', serviceUuids, ' ', rssi);
       if (rssi > -80) {
-        client.publish('dogs/rikou', rssi);
+        //client.publish('dogs/rikou', rssi);
+        http.request(options, callback).end();
       }
       //console.log('Manufacturer Data: ', manufacturerData);
       // console.log('---');
