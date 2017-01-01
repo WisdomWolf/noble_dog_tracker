@@ -42,13 +42,13 @@ noble.on('discover', function(peripheral) {
     var localName = peripheral.advertisement.localName;
     var serviceUuids = peripheral.advertisement.serviceUuids[0];
     var manufacturerData = peripheral.advertisement.manufacturerData;
-    var entity;
-    if (rssi > -90) {
-      if (rikou.test(serviceUuids)) {
-        entity = 'Rikou';
-      } else if (serviceUuids == testUUID) {
-        entity = 'test';
-      }
+    var entity = null;
+    if (rikou.test(serviceUuids)) {
+      entity = 'Rikou';
+    } else if (serviceUuids == testUUID) {
+      entity = 'test';
+    }
+    if (entity && rssi > -90) {
       console.log(now, ' - found: ', entity, ' ', rssi);
       if (rssi > -80) {
         //client.publish('dogs/rikou', rssi);
