@@ -52,7 +52,6 @@ noble.on('discover', function(peripheral) {
       }
       if (seenCount > 2) {
         var req = http.request(options, callback).end();
-        req.end();
       }
       //console.log('Manufacturer Data: ', manufacturerData);
       // console.log('---');
