@@ -42,8 +42,14 @@ noble.on('discover', function(peripheral) {
     var localName = peripheral.advertisement.localName;
     var serviceUuids = peripheral.advertisement.serviceUuids[0];
     var manufacturerData = peripheral.advertisement.manufacturerData;
-    if (rikou.test(serviceUuids) || serviceUuids == testUUID) {
-      console.log(now, ' - found device: ', serviceUuids, ' ', rssi);
+    var entity;
+    if (rssi > -90) {
+      if (rikou.test(serviceUuids)) {
+        entity = 'Rikou';
+      } else if (serviceUuids == testUUID) {
+        entity = 'test';
+      }
+      console.log(now, ' - found: ', entity, ' ', rssi);
       if (rssi > -80) {
         //client.publish('dogs/rikou', rssi);
         seenCount++;
@@ -52,6 +58,7 @@ noble.on('discover', function(peripheral) {
       }
       if (seenCount > 2) {
         var req = http.request(options, callback).end();
+        console.log('!!!http alert sent !!!');
       }
       //console.log('Manufacturer Data: ', manufacturerData);
       // console.log('---');
