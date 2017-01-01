@@ -17,6 +17,11 @@ callback = function(response) {
     str += chunk;
   });
 
+  //errors
+  response.on('error', function (e) {
+    console.log(e);
+  });
+
   //the whole response has been recieved, so we just print it out here
   response.on('end', function () {
     console.log(str);
@@ -59,7 +64,11 @@ noble.on('discover', function(peripheral) {
         seenCount = 0;
       }
       if (seenCount > 2) {
-        var req = http.request(options, callback).end();
+        var req = http.request(options, callback);
+        req.on('error', function(e) {
+          console.log(e);
+        });
+        req.end();
         console.log('!!!http alert sent !!!');
       }
       //console.log('Manufacturer Data: ', manufacturerData);
