@@ -27,8 +27,10 @@ callback = function(response) {
 noble.on('stateChange', function(state) {
   if (state === 'poweredOn') {
     noble.startScanning([], true);
+    console.log('Noble scanner started...');
   }  else  {
     noble.stopScanning();
+    console.log('Noble scanner stopped.');
   }
 });
 
