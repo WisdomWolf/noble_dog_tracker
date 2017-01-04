@@ -41,7 +41,7 @@ app.get('/rikou', function(req, res) {
   var location = req.query.in;
   var dogStatus = now + ' - Rikou is in ' + location;
   winston.debug(dogStatus);
-  res.send('Logging: ', dogStatus);
+  res.send('Logging: ' + dogStatus);
 });
 
 var server = app.listen(8081, function() {
