@@ -33,10 +33,10 @@ callback = function(response) {
 noble.on('stateChange', function(state) {
   if (state === 'poweredOn') {
     noble.startScanning([], true);
-    winston.log('Noble scanner started...');
+    winston.info('Noble scanner started...');
   }  else  {
     noble.stopScanning();
-    winston.log('Noble scanner stopped.');
+    winston.info('Noble scanner stopped.');
   }
 });
 
@@ -58,7 +58,7 @@ noble.on('discover', function(peripheral) {
       entity = 'test';
     }
     if (entity && rssi > -80) {
-      winston.log(now, ' - found: ', entity, ' ', rssi);
+      winston.verbose(now, ' - found: ', entity, ' ', rssi);
       if (rssi > -75) {
         //client.publish('dogs/rikou', rssi);
         recentlySeen[entity]++;
@@ -71,7 +71,7 @@ noble.on('discover', function(peripheral) {
         req.on('error', function(e) {
           winston.error(e);
         });
-        winston.log('!!!http alert sent !!!');
+        winston.warn(now, '!!!http alert sent !!!');
       }
       //console.log('Manufacturer Data: ', manufacturerData);
       // console.log('---');
