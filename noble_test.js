@@ -4,6 +4,7 @@ const mqtt = require('mqtt');
 var winston = require('winston');
 const client = mqtt.connect('mqtt://192.168.1.22');
 winston.add(winston.transports.File, { filename: 'noble_test.log'});
+winston.level = 'debug';
 
 var options = {
   host: 'nodered-wisehub.pagekite.me',
