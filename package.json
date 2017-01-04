@@ -1,0 +1,26 @@
+{
+  "name": "noble_dog_tracker",
+  "version": "1.0.0",
+  "description": "Node.js based BLE proximity tracker for dogs",
+  "main": "noble_test.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mqtt": "^2.1.3",
+    "noble": "^1.7.0",
+    "winston": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WisdomWolf/noble_dog_tracker.git"
+  },
+  "author": "WisdomWolf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WisdomWolf/noble_dog_tracker/issues"
+  },
+  "homepage": "https://github.com/WisdomWolf/noble_dog_tracker#readme"
+}
