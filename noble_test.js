@@ -58,6 +58,9 @@ noble.on('discover', function(peripheral) {
     } else if (serviceUuids == testUUID) {
       entity = 'test';
     }
+    if (isNaN(recentlySeen[entity])) {
+      recentlySeen[entity] = 0;
+    }
     if (entity && rssi > -80) {
       winston.verbose(now, ' - found: ', entity, ' ', rssi);
       if (rssi > -75) {
