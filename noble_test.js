@@ -41,7 +41,7 @@ app.get('/rikou', function(req, res) {
   var location = req.query.in;
   var dogStatus = now + ' - Rikou is in ', location;
   winston.debug(dogStatus);
-  res.send('Logging:\n', dogStatus);
+  res.send('Logging: ', dogStatus);
 });
 
 var server = app.listen(8081, function() {
@@ -89,14 +89,14 @@ noble.on('discover', function(peripheral) {
       } else {
         recentlySeen[entity] = 0;
       }
-      if (recentlySeen[entity] > 2) {
-        var req = http.request(options, callback);
-        req.end();
-        req.on('error', function(e) {
-          winston.error(e);
-        });
-        winston.warn(now, '!!!http alert sent !!!');
-      }
+      // if (recentlySeen[entity] > 2) {
+      //   var req = http.request(options, callback);
+      //   req.end();
+      //   req.on('error', function(e) {
+      //     winston.error(e);
+      //   });
+      //   winston.warn(now, '!!!http alert sent !!!');
+      // }
       //console.log('Manufacturer Data: ', manufacturerData);
       // console.log('---');
     }
