@@ -1,5 +1,7 @@
 var noble = require('noble');
 var http = require('http');
+var express = require('express');
+var app = express();
 const mqtt = require('mqtt');
 var winston = require('winston');
 const client = mqtt.connect('mqtt://192.168.1.22');
@@ -30,14 +32,24 @@ callback = function(response) {
   });
 }
 
-http.createServer(function(request, response) {
-  var now = new Date().toLocaleString();
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.write("data logged");
-  response.end();
-  winston.warn(now, ' - Dog status change request received');
-}).listen(8888);
+app.get('/', function(req, res) {
+  res.send('Hello World');
+});
 
+app.get('/rikou', fucntion(req, res) {
+  var now = new Date().toLocaleString();
+  var location = req.query.in;
+  var dogStatus = now + ' - Rikou is in ', location;
+  winston.debug(dogStatus);
+  res.send('Logging:\n', dogStatus);
+});
+
+var server = app.listen(8081, function() {
+  var host = server.address().address
+  var port = server.address().port
+
+  winston.debug("Example app listening at http://%s:%s", host, port);
+});
 
 noble.on('stateChange', function(state) {
   if (state === 'poweredOn') {
