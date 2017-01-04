@@ -30,6 +30,14 @@ callback = function(response) {
   });
 }
 
+http.createServer(function(request, response) {
+  var now = new Date().toLocaleString();
+  response.writeHead(200, {"Content-Type": "text/plain"});
+  response.write("data logged");
+  response.end();
+  winston.warn(now, ' - Dog status change request received');
+}).listen(8888);
+
 
 noble.on('stateChange', function(state) {
   if (state === 'poweredOn') {
@@ -46,7 +54,7 @@ var testUUID = 'fefd';
 var recentlySeen = {};
 
 noble.on('discover', function(peripheral) {
-    var now = new Date().toLocaleString();
+    
     var macAddress = peripheral.uuid;
     var rssi = peripheral.rssi;
     var localName = peripheral.advertisement.localName;
