@@ -39,7 +39,7 @@ app.get('/', function(req, res) {
 app.get('/rikou', function(req, res) {
   var now = new Date().toLocaleString();
   var location = req.query.in;
-  var dogStatus = now + ' - Rikou is in ', location;
+  var dogStatus = now + ' - Rikou is in ' + location;
   winston.debug(dogStatus);
   res.send('Logging: ', dogStatus);
 });
