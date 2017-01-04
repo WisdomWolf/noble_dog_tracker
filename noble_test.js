@@ -36,7 +36,7 @@ app.get('/', function(req, res) {
   res.send('Hello World');
 });
 
-app.get('/rikou', fucntion(req, res) {
+app.get('/rikou', function(req, res) {
   var now = new Date().toLocaleString();
   var location = req.query.in;
   var dogStatus = now + ' - Rikou is in ', location;
