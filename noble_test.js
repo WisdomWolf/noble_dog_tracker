@@ -54,7 +54,7 @@ var testUUID = 'fefd';
 var recentlySeen = {};
 
 noble.on('discover', function(peripheral) {
-    
+    var now = new Date().toLocaleString();
     var macAddress = peripheral.uuid;
     var rssi = peripheral.rssi;
     var localName = peripheral.advertisement.localName;
