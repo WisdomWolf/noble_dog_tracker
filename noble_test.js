@@ -89,15 +89,13 @@ noble.on('discover', function(peripheral) {
       } else {
         recentlySeen[entity] = 0;
       }
-      // if (recentlySeen[entity] > 2) {
-      //   var req = http.request(options, callback);
-      //   req.end();
-      //   req.on('error', function(e) {
-      //     winston.error(e);
-      //   });
-      //   winston.warn(now, '!!!http alert sent !!!');
-      // }
-      //console.log('Manufacturer Data: ', manufacturerData);
-      // console.log('---');
+      if (recentlySeen[entity] > 2) {
+        var req = http.request(options, callback);
+        req.end();
+        req.on('error', function(e) {
+          winston.error(e);
+        });
+        winston.warn(now, '!!!http alert sent !!!');
+      }
     }
 });
