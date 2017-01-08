@@ -93,7 +93,7 @@ noble.on('discover', function(peripheral) {
     if (isNaN(recentlySeen[entity])) {
       recentlySeen[entity] = 0;
     }
-    if (entity && rssi > -80) {
+    if (entity && rssi > -90) {
       logger.verbose('found: ', entity, ' ', rssi);
       if (rssi > -75) {
         //client.publish('dogs/rikou', rssi);
