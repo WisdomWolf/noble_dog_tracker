@@ -95,7 +95,7 @@ noble.on('discover', function(peripheral) {
     }
     if (entity && rssi > -90) {
       logger.verbose('found: ', entity, ' ', rssi);
-      if (rssi > -75) {
+      if (rssi > -72) {
         //client.publish('dogs/rikou', rssi);
         recentlySeen[entity]++;
       } else {
