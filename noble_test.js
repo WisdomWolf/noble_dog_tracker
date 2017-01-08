@@ -107,7 +107,7 @@ noble.on('discover', function(peripheral) {
         req.on('error', function(e) {
           logger.error('Error in HTTP Request - ' + e);
         });
-        logger.warn(now, '!!!http alert sent !!!');
+        logger.warn('!!!http alert sent !!!');
       }
     }
 });
