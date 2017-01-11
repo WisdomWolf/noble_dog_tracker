@@ -4,12 +4,19 @@ var express = require('express');
 var app = express();
 const mqtt = require('mqtt');
 var winston = require('winston');
+require('winston-loggly-bulk');
 const client = mqtt.connect('mqtt://192.168.1.22');
 const logger = new (winston.Logger)({
   transports: [
     // colorize the output to the console
     new (winston.transports.Console)({ colorize: true }),
-    new (winston.transports.File)({ filename: 'noble_test.log'})
+    new (winston.transports.File)({ filename: 'noble_test.log'}),
+    new (winston.transports.Loggly)({
+      token: "eb3225ea-6784-4d82-b1df-7e8ab7d17b62",
+      subdomain: "wisdomwolf",
+      tags: ["Winston-NodeJS"],
+      json:true
+    })
   ]
 });
 logger.level = 'debug';
