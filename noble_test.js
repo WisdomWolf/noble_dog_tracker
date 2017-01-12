@@ -97,7 +97,7 @@ noble.on('stateChange', function(state) {
 });
 
 var rikouRegex = /960c.*?60077ad/i;
-var testUUID = 'fefd';
+var testUUID = /fefd/i;
 var tester = {'name': 'test', 'UUID': testUUID, 
                 'recentlySeen': 0, 'location': 'unknown', 
                 'rssi': -100};
