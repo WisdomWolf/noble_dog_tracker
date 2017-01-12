@@ -111,7 +111,7 @@ var rikou = {'name': 'Rikou', 'UUID': rikouRegex,
                 'recentlySeen': 0, 'location': 'unknown',
                 'rssi': -100};
 var dogs = [tester, rikou];
-var things = {};
+var things = [];
 
 noble.on('discover', function(peripheral) {
     var macAddress = peripheral.uuid;
