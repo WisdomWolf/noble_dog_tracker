@@ -46,22 +46,30 @@ callback = function(response) {
 }
 
 app.get('/', function(req, res) {
-  res.send('Hello World');
+  var results = dogs.map(function(item) {
+    return '<h1>' + item.name + ':</h1>' + '</br>\n<b>Last Seen:</b> '
+     + item.lastSeen + '</br>\n<b>Current RSSI:</b> ' + item.rssi;
+  });
+  res.send(results.join('\n'));
 });
 
 app.get('/log', function(req, res) {
   var entity = req.query.entity;
   var location = req.query.location;
-  var dog = dogs.find(function(item) {
-    if (item.name == entity) {
-      return item;
-    }
-  });
-  dog.location = location;
+  var dog = findNameMatch(dogs, entity);
+  if (dog) {
+    dog.location = location;
+  }
   var locStatus = entity + ' @ ' + location;
   logger.log('debug', locStatus, dog);
   res.send('Recording to log: ' + locStatus);
 });
+
+app.get('/last_outside', function(req, res) {
+  var entity = req.query.entity || req.query.dog;
+  var dog = findNameMatch(dogs, entity);
+  res.send(dog.lastSeen);
+}
 
 app.get('/rikou', function(req, res) {
   var location = req.query.in;
@@ -93,7 +101,7 @@ var testUUID = 'fefd';
 var tester = {'name': 'test', 'UUID': /fefd/i, 
                 'recentlySeen': 0, 'location': 'unknown', 
                 'rssi': -100};
-var rikou = {'name': 'rikou', 'UUID': /960c.*?60077ad/i,
+var rikou = {'name': 'Rikou', 'UUID': /960c.*?60077ad/i,
                 'recentlySeen': 0, 'location': 'unknown',
                 'rssi': -100};
 var dogs = [tester, rikou];
@@ -105,24 +113,18 @@ noble.on('discover', function(peripheral) {
     var localName = peripheral.advertisement.localName;
     var serviceUuids = peripheral.advertisement.serviceUuids[0];
     var manufacturerData = peripheral.advertisement.manufacturerData;
-    var entity = null;
-    if (rikouRegex.test(serviceUuids)) {
-      entity = 'Rikou';
-    } else if (serviceUuids == testUUID) {
-      entity = 'test';
-    }
-    if (isNaN(recentlySeen[entity])) {
-      recentlySeen[entity] = 0;
-    }
-    if (entity && rssi > -90) {
-      logger.log('verbose', 'found: ' + entity + ' ' + rssi, {'rssi': rssi, 'entity': entity});
-      if (rssi > -72) {
+    var dog = getIdMatch(dogs, serviceUuids);
+    if (dog && rssi > -90) {
+      dog.rssi = rssi;
+      logger.log('verbose', 'found: ' + dog.name + ' ' + rssi, dog);
+      if (dog.rssi > -72) {
         //client.publish('dogs/rikou', rssi);
-        recentlySeen[entity]++;
+        dog.recentlySeen++;
       } else {
-        recentlySeen[entity] = 0;
+        dog.recentlySeen = 0;
       }
-      if (recentlySeen[entity] > 2) {
+      if (dog.recentlySeen > 2) {
+        dog.lastSeen = new Date();
         var req = http.request(options, callback);
         req.end();
         req.on('error', function(e) {
@@ -132,3 +134,27 @@ noble.on('discover', function(peripheral) {
       }
     }
 });
+
+function findNameMatch(list, name) {
+  return list.find(function(item) {
+    if (name.toLowerCase() == item.name.toLowerCase()) {
+      return item;
+    }
+  });
+}
+
+function getIdMatches(list, matchString) {
+  return list.filter(function(item) {
+    if (item.UUID.test(matchString)) {
+      return item;
+    }
+  });
+}
+
+function getIdMatch(list, matchString) {
+  return list.find(function(item) {
+    if (item.UUID.test(matchString)) {
+      return item;
+    }
+  });
+}
