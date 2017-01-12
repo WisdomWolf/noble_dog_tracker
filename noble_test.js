@@ -98,10 +98,10 @@ noble.on('stateChange', function(state) {
 
 var rikouRegex = /960c.*?60077ad/i;
 var testUUID = 'fefd';
-var tester = {'name': 'test', 'UUID': /fefd/i, 
+var tester = {'name': 'test', 'UUID': testUUID, 
                 'recentlySeen': 0, 'location': 'unknown', 
                 'rssi': -100};
-var rikou = {'name': 'Rikou', 'UUID': /960c.*?60077ad/i,
+var rikou = {'name': 'Rikou', 'UUID': rikouRegex,
                 'recentlySeen': 0, 'location': 'unknown',
                 'rssi': -100};
 var dogs = [tester, rikou];
