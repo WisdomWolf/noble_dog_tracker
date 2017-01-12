@@ -69,7 +69,7 @@ app.get('/last_outside', function(req, res) {
   var entity = req.query.entity || req.query.dog;
   var dog = findNameMatch(dogs, entity);
   res.send(dog.lastSeen);
-}
+});
 
 app.get('/rikou', function(req, res) {
   var location = req.query.in;
