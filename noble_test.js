@@ -9,17 +9,23 @@ const client = mqtt.connect('mqtt://192.168.1.22');
 const logger = new (winston.Logger)({
   transports: [
     // colorize the output to the console
-    new (winston.transports.Console)({ colorize: true }),
-    new (winston.transports.File)({ filename: 'noble_test.log'}),
+    new (winston.transports.Console)({ 
+      colorize: true,
+      level: 'verbose'
+    }),
+    new (winston.transports.File)({ 
+      filename: 'noble_test.log',
+      level: 'info'
+    }),
     new (winston.transports.Loggly)({
       token: "eb3225ea-6784-4d82-b1df-7e8ab7d17b62",
       subdomain: "wisdomwolf",
       tags: ["Winston-NodeJS"],
-      json:true
+      json:true,
+      level: 'debug'
     })
   ]
 });
-logger.level = 'debug';
 
 var options = {
   host: 'nodered-wisehub.pagekite.me',
@@ -61,7 +67,7 @@ app.get('/log', function(req, res) {
     dog.location = location;
   }
   var locStatus = entity + ' @ ' + location;
-  logger.log('debug', locStatus, dog);
+  logger.log('info', locStatus, dog);
   res.send('Recording to log: ' + locStatus);
 });
 
@@ -75,7 +81,7 @@ app.get('/rikou', function(req, res) {
   var location = req.query.in;
   var dogStatus = 'Rikou is in ' + location;
   rikou.location = location;
-  logger.log('debug', dogStatus, {'entity': 'Rikou', 'location': location});
+  logger.log('info', dogStatus, {'entity': 'Rikou', 'location': location});
   res.send('Logging: ' + dogStatus);
 });
 
@@ -105,7 +111,7 @@ var rikou = {'name': 'Rikou', 'UUID': rikouRegex,
                 'recentlySeen': 0, 'location': 'unknown',
                 'rssi': -100};
 var dogs = [tester, rikou];
-var recentlySeen = {};
+var things = {};
 
 noble.on('discover', function(peripheral) {
     var macAddress = peripheral.uuid;
@@ -114,6 +120,11 @@ noble.on('discover', function(peripheral) {
     var serviceUuids = peripheral.advertisement.serviceUuids[0];
     var manufacturerData = peripheral.advertisement.manufacturerData;
     var dog = getIdMatch(dogs, serviceUuids);
+    var bleThing = {'macAddress': macAddress, 'localName': localName, 'uuid': serviceUuids};
+    if (things.indexOf(bleThing) < 0) {
+      things.push(bleThing);
+      logger.log('debug', 'new thing found', bleThing);
+    }
     if (dog && rssi > -90) {
       dog.rssi = rssi;
       logger.log('verbose', 'found: ' + dog.name + ' ' + rssi, dog);
