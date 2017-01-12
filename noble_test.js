@@ -53,14 +53,14 @@ app.get('/log', function(req, res) {
   var entity = req.query.entity;
   var location = req.query.location;
   var locStatus = entity + ' @ ' + location;
-  logger.debug(locStatus);
+  logger.log('debug', locStatus, {'entity': entity, 'location': location});
   res.send('Recording to log: ' + locStatus);
 });
 
 app.get('/rikou', function(req, res) {
   var location = req.query.in;
   var dogStatus = 'Rikou is in ' + location;
-  logger.debug(dogStatus);
+  logger.log('debug', dogStatus, {'entity': 'Rikou', 'location': location});
   res.send('Logging: ' + dogStatus);
 });
 
