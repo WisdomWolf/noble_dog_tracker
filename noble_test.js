@@ -52,14 +52,21 @@ app.get('/', function(req, res) {
 app.get('/log', function(req, res) {
   var entity = req.query.entity;
   var location = req.query.location;
+  var dog = dogs.find(function(item) {
+    if (item.name == entity) {
+      return item;
+    }
+  });
+  dog.location = location;
   var locStatus = entity + ' @ ' + location;
-  logger.log('debug', locStatus, {'entity': entity, 'location': location});
+  logger.log('debug', locStatus, dog);
   res.send('Recording to log: ' + locStatus);
 });
 
 app.get('/rikou', function(req, res) {
   var location = req.query.in;
   var dogStatus = 'Rikou is in ' + location;
+  rikou.location = location;
   logger.log('debug', dogStatus, {'entity': 'Rikou', 'location': location});
   res.send('Logging: ' + dogStatus);
 });
@@ -81,8 +88,15 @@ noble.on('stateChange', function(state) {
   }
 });
 
-var rikou = /960c.*?60077ad/i;
+var rikouRegex = /960c.*?60077ad/i;
 var testUUID = 'fefd';
+var tester = {'name': 'test', 'UUID': /fefd/i, 
+                'recentlySeen': 0, 'location': 'unknown', 
+                'rssi': -100};
+var rikou = {'name': 'Rikou', 'UUID': /960c.*?60077ad/i,
+                'recentlySeen': 0, 'location': 'unknown',
+                'rssi': -100};
+var dogs = [tester, rikou];
 var recentlySeen = {};
 
 noble.on('discover', function(peripheral) {
@@ -92,7 +106,7 @@ noble.on('discover', function(peripheral) {
     var serviceUuids = peripheral.advertisement.serviceUuids[0];
     var manufacturerData = peripheral.advertisement.manufacturerData;
     var entity = null;
-    if (rikou.test(serviceUuids)) {
+    if (rikouRegex.test(serviceUuids)) {
       entity = 'Rikou';
     } else if (serviceUuids == testUUID) {
       entity = 'test';
