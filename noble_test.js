@@ -53,11 +53,11 @@ callback = function(response) {
 
 app.get('/', function(req, res) {
   var results = dogs.map(function(dog) {
-    return '<h1>' + dog.name + ':</h1>' + '\n<b>Last Seen:</b> '
-     + dog.lastSeen + '\n<b>Current RSSI:</b> ' + dog.rssi 
-     + '\n<b>Current Location: </b>' + dog.location;
+    return '<h1>' + dog.name + ':</h1>' + '</br><b>Last Seen:</b> '
+     + dog.lastSeen + '</br><b>Current RSSI:</b> ' + dog.rssi 
+     + '</br><b>Current Location: </b>' + dog.location;
   });
-  res.send(results.join('\n'));
+  res.send(results.join('</br>'));
 });
 
 app.get('/log', function(req, res) {
@@ -66,10 +66,13 @@ app.get('/log', function(req, res) {
   var dog = findNameMatch(dogs, entity);
   if (dog) {
     dog.location = location;
+    var locStatus = entity + ' @ ' + location;
+    logger.log('info', locStatus, dog);
+    res.send('Recording to log: ' + locStatus);
+  } else {
+    logger.log('error', 'Invalid entity - ' + entity, {'entity': entity});
+    res.send(entity + ' is not valid.');
   }
-  var locStatus = entity + ' @ ' + location;
-  logger.log('info', locStatus, dog);
-  res.send('Recording to log: ' + locStatus);
 });
 
 app.get('/last_outside', function(req, res) {
