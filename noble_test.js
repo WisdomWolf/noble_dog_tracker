@@ -93,7 +93,7 @@ var testUUID = 'fefd';
 var tester = {'name': 'test', 'UUID': /fefd/i, 
                 'recentlySeen': 0, 'location': 'unknown', 
                 'rssi': -100};
-var rikou = {'name': 'Rikou', 'UUID': /960c.*?60077ad/i,
+var rikou = {'name': 'rikou', 'UUID': /960c.*?60077ad/i,
                 'recentlySeen': 0, 'location': 'unknown',
                 'rssi': -100};
 var dogs = [tester, rikou];
