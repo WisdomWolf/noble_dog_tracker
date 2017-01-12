@@ -52,9 +52,10 @@ callback = function(response) {
 }
 
 app.get('/', function(req, res) {
-  var results = dogs.map(function(item) {
-    return '<h1>' + item.name + ':</h1>' + '</br>\n<b>Last Seen:</b> '
-     + item.lastSeen + '</br>\n<b>Current RSSI:</b> ' + item.rssi;
+  var results = dogs.map(function(dog) {
+    return '<h1>' + dog.name + ':</h1>' + '\n<b>Last Seen:</b> '
+     + dog.lastSeen + '\n<b>Current RSSI:</b> ' + dog.rssi 
+     + '\n<b>Current Location: </b>' + dog.location;
   });
   res.send(results.join('\n'));
 });
@@ -104,7 +105,7 @@ noble.on('stateChange', function(state) {
 
 var rikouRegex = /960c.*?60077ad/i;
 var testUUID = /fefd/i;
-var tester = {'name': 'test', 'UUID': testUUID, 
+var tester = {'name': 'Tester', 'UUID': testUUID, 
                 'recentlySeen': 0, 'location': 'unknown', 
                 'rssi': -100};
 var rikou = {'name': 'Rikou', 'UUID': rikouRegex,
