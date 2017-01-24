@@ -1,7 +1,17 @@
 var noble = require('noble');
 var http = require('http');
-var express = require('express');
-var app = express();
+var express = require('express')
+  , cons = require('consolidate')
+  , app = express();
+
+// assign the swig engine to .html files
+app.engine('html', cons.hogan);
+
+// set .html as the default extension
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+
+var io = require('socket.io')(http);
 const mqtt = require('mqtt');
 var winston = require('winston');
 require('winston-loggly-bulk');
@@ -59,6 +69,12 @@ app.get('/', function(req, res) {
   });
   res.send(results.join('</br>'));
 });
+
+app.get('/dogs', function(req, res) {
+  var template = "<h1>{{name}}</h1><b>RSSI:</b> {{rssi}}";
+  var html = Mustache.to_html(template, person);
+  res.send(html);
+})
 
 app.get('/log', function(req, res) {
   var entity = req.query.entity;
