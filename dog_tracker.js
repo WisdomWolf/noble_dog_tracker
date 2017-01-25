@@ -1,11 +1,12 @@
-var noble = require('noble');
-var http = require('http');
 var express = require('express')
   , cons = require('consolidate')
   , app = express();
+var noble = require('noble');
+var http = require('http').Server(app);
+var request = require('request');
 
-// assign the swig engine to .html files
-app.engine('html', cons.hogan);
+// assign the hogan engine to .html files
+app.engine('html', cons.handlebars);
 
 // set .html as the default extension
 app.set('view engine', 'html');
@@ -13,6 +14,7 @@ app.set('views', __dirname + '/views');
 
 var io = require('socket.io')(http);
 const mqtt = require('mqtt');
+var Handlebars = require('handlebars');
 var winston = require('winston');
 require('winston-loggly-bulk');
 const client = mqtt.connect('mqtt://192.168.1.22');
@@ -71,9 +73,8 @@ app.get('/', function(req, res) {
 });
 
 app.get('/dogs', function(req, res) {
-  var template = "<h1>{{name}}</h1><b>RSSI:</b> {{rssi}}";
-  var html = Mustache.to_html(template, person);
-  res.send(html);
+  var dog = rikou;
+  res.render('dogs', {'dogs': dogs});
 })
 
 app.get('/log', function(req, res) {
@@ -105,11 +106,14 @@ app.get('/rikou', function(req, res) {
   res.send('Logging: ' + dogStatus);
 });
 
-var server = app.listen(8081, function() {
-  var host = server.address().address
-  var port = server.address().port
+// var server = app.listen(8081, function() {
+//   var host = server.address().address
+//   var port = server.address().port
 
-  logger.debug("Dog Tracker app listening at http://%s:%s", host, port);
+//   logger.debug("Dog Tracker app listening at http://%s:%s", host, port);
+// });
+http.listen(8081, function(){
+  console.log('listening on *:8081');
 });
 
 noble.on('stateChange', function(state) {
@@ -120,6 +124,12 @@ noble.on('stateChange', function(state) {
     noble.stopScanning();
     logger.info('Noble scanner stopped.');
   }
+});
+
+io.on('connection', function(socket){
+  socket.on('connected', function(msg){
+    io.emit('connection status', "Connection Established");
+  });
 });
 
 var rikouRegex = /960c.*?60077ad/i;
@@ -147,6 +157,7 @@ noble.on('discover', function(peripheral) {
     }
     if (dog && rssi > -90) {
       dog.rssi = rssi;
+      io.emit('rssi update', dog);
       logger.log('verbose', 'found: ' + dog.name + ' ' + rssi, dog);
       if (dog.rssi > -72) {
         //client.publish('dogs/rikou', rssi);
@@ -156,12 +167,11 @@ noble.on('discover', function(peripheral) {
       }
       if (dog.recentlySeen > 2) {
         dog.lastSeen = new Date();
-        var req = http.request(options, callback);
-        req.end();
-        req.on('error', function(e) {
-          logger.error('Error in HTTP Request - ' + e);
+        request('http://nodered-wisehub.pagekite.me/trigger/rikou_is_outside', function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            logger.warn('!!!http alert sent !!!');
+          }
         });
-        logger.warn('!!!http alert sent !!!');
       }
     }
 });

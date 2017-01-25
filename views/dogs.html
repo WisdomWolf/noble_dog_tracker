@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <body>
+    <div class="dogs">
+        {{#each dogs}}
+        <div class="dog">
+            <h2>{{name}}</h2>
+            <p id={{name}}_rssi><b>RSSI:</b> {{rssi}}</p>
+        </div>
+        {{/each}}
+    </div>
+    <div id=test-div></div>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var socket = io();
+        socket.on('rssi update', function (dog) {
+            $('#' + dog.name + '_rssi').replaceWith('<p id=' + dog.name +'_rssi><b>RSSI: </b>' + dog.rssi + '</p>');
+            console.log("Received RSSI update for " + dog.name + ": " + dog.rssi);
+        });
+        socket.on('connection status', function(msg) {
+            $('#test-div').text(msg);
+        })
+    </script>
+  </body>
+</html>
