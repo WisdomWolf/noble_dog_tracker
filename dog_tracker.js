@@ -140,7 +140,7 @@ var tester = {'name': 'Tester', 'UUID': testUUID,
 var rikou = {'name': 'Rikou', 'UUID': rikouRegex,
                 'recentlySeen': 0, 'location': 'unknown',
                 'rssi': -100};
-var dogs = [tester, rikou];
+var dogs = [rikou];
 var things = [];
 
 noble.on('discover', function(peripheral) {
