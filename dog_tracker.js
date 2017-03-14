@@ -150,11 +150,11 @@ noble.on('discover', function(peripheral) {
     var serviceUuids = peripheral.advertisement.serviceUuids[0];
     var manufacturerData = peripheral.advertisement.manufacturerData;
     var dog = getIdMatch(dogs, serviceUuids);
-    var bleThing = {'macAddress': macAddress, 'localName': localName, 'uuid': serviceUuids};
-    if (things.indexOf(bleThing) < 0) {
-      things.push(bleThing);
-      logger.log('debug', 'new thing found', bleThing);
-    }
+    //var bleThing = {'macAddress': macAddress, 'localName': localName, 'uuid': serviceUuids};
+   // if (things.indexOf(bleThing) < 0) {
+    //  things.push(bleThing);
+  //    logger.log('debug', 'new thing found', bleThing);
+    //}
     if (dog && rssi > -90) {
       dog.rssi = rssi;
       io.emit('rssi update', dog);
