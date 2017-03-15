@@ -159,13 +159,13 @@ noble.on('discover', function(peripheral) {
       dog.rssi = rssi;
       io.emit('rssi update', dog);
       logger.log('verbose', 'found: ' + dog.name + ' ' + rssi, dog);
-      if (dog.rssi > -72) {
+      if (dog.rssi > -74) {
         //client.publish('dogs/rikou', rssi);
         dog.recentlySeen++;
       } else {
         dog.recentlySeen = 0;
       }
-      if (dog.recentlySeen > 2) {
+      if (dog.recentlySeen > 3) {
         dog.lastSeen = new Date();
         request('http://nodered-wisehub.pagekite.me/trigger/rikou_is_outside', function (error, response, body) {
           if (!error && response.statusCode == 200) {
